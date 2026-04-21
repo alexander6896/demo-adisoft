@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Taquería del Centro — Demo por Sistemas Adisoft</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --negro: #0a0705;
+    --rojo: #c0392b;
+    --rojo-claro: #e74c3c;
+    --dorado: #d4a017;
+    --crema: #f5f0e8;
+    --gris: #7a7060;
+    --blanco: #ffffff;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--negro);
+    color: var(--crema);
+    overflow-x: hidden;
+  }
+
+  /* ── DEMO BADGE ── */
+  .demo-badge {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 9999;
+    background: linear-gradient(90deg, #0d1b2e, #1a3050);
+    color: #fff;
+    text-align: center;
+    padding: 10px 20px;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    border-bottom: 2px solid var(--rojo);
+  }
+  .demo-badge span { opacity: 0.7; }
+  .demo-badge strong { color: #fff; }
+  .demo-badge a {
+    background: var(--rojo);
+    color: #fff;
+    text-decoration: none;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    transition: background 0.2s;
+  }
+  .demo-badge a:hover { background: var(--rojo-claro); }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 38px; left: 0; right: 0;
+    z-index: 100;
+    padding: 20px 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background 0.4s, padding 0.4s;
+  }
+  nav.scrolled {
+    background: rgba(10,7,5,0.95);
+    backdrop-filter: blur(12px);
+    padding: 14px 60px;
+    border-bottom: 1px solid rgba(212,160,23,0.2);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--dorado);
+    letter-spacing: 1px;
+  }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a {
+    color: rgba(245,240,232,0.8);
+    text-decoration: none;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--dorado); }
+  .nav-cta {
+    background: var(--rojo);
+    color: #fff !important;
+    padding: 8px 22px !important;
+    border-radius: 4px;
+    font-weight: 500 !important;
+    transition: background 0.2s !important;
+  }
+  .nav-cta:hover { background: var(--rojo-claro) !important; color: #fff !important; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    padding-top: 38px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 65% 50%, rgba(192,57,43,0.12) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 80% 20%, rgba(212,160,23,0.08) 0%, transparent 60%),
+      linear-gradient(160deg, #0a0705 0%, #100c09 50%, #0d0a07 100%);
+  }
+  .hero-texture {
+    position: absolute; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4a017' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    opacity: 0.4;
+  }
+  .hero-content {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 60px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(212,160,23,0.12);
+    border: 1px solid rgba(212,160,23,0.3);
+    color: var(--dorado);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+    animation: fadeUp 0.8s ease forwards;
+  }
+  .hero-tag::before { content: '★'; font-size: 10px; }
+  .hero-h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(52px, 7vw, 88px);
+    line-height: 0.95;
+    font-weight: 900;
+    margin-bottom: 28px;
+    animation: fadeUp 0.9s ease 0.1s both;
+  }
+  .hero-h1 em {
+    font-style: italic;
+    color: var(--dorado);
+    display: block;
+  }
+  .hero-desc {
+    font-size: 17px;
+    line-height: 1.7;
+    color: rgba(245,240,232,0.65);
+    max-width: 420px;
+    margin-bottom: 40px;
+    animation: fadeUp 1s ease 0.2s both;
+  }
+  .hero-btns {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    animation: fadeUp 1s ease 0.3s both;
+  }
+  .btn-primary {
+    background: var(--rojo);
+    color: #fff;
+    padding: 16px 36px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+    transition: background 0.2s, transform 0.2s;
+    display: inline-block;
+  }
+  .btn-primary:hover { background: var(--rojo-claro); transform: translateY(-2px); }
+  .btn-secondary {
+    background: transparent;
+    color: var(--crema);
+    padding: 16px 36px;
+    border-radius: 4px;
+    border: 1px solid rgba(245,240,232,0.3);
+    text-decoration: none;
+    font-weight: 400;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+    transition: border-color 0.2s, color 0.2s;
+    display: inline-block;
+  }
+  .btn-secondary:hover { border-color: var(--dorado); color: var(--dorado); }
+
+  .hero-visual {
+    position: relative;
+    animation: fadeUp 1s ease 0.2s both;
+  }
+  .hero-card {
+    background: linear-gradient(135deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02));
+    border: 1px solid rgba(212,160,23,0.2);
+    border-radius: 16px;
+    padding: 40px;
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-card::before {
+    content: '';
+    position: absolute;
+    top: -50%; right: -30%;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(192,57,43,0.15), transparent 70%);
+    pointer-events: none;
+  }
+  .food-emoji { font-size: 64px; margin-bottom: 16px; display: block; }
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--dorado);
+    margin-bottom: 8px;
+  }
+  .card-sub {
+    font-size: 13px;
+    color: rgba(245,240,232,0.5);
+    margin-bottom: 24px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .stars { color: var(--dorado); font-size: 18px; margin-bottom: 12px; }
+  .review-text {
+    font-size: 14px;
+    font-style: italic;
+    color: rgba(245,240,232,0.7);
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+  .review-author { font-size: 13px; color: rgba(245,240,232,0.5); }
+
+  .floating-badge {
+    position: absolute;
+    top: -20px; right: -20px;
+    background: var(--rojo);
+    color: #fff;
+    border-radius: 50%;
+    width: 80px; height: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 500;
+    text-align: center;
+    line-height: 1.3;
+    border: 3px solid var(--negro);
+    animation: pulse 2s ease infinite;
+  }
+  .floating-badge strong { font-size: 18px; }
+
+  /* ── STATS ── */
+  .stats-bar {
+    background: rgba(212,160,23,0.08);
+    border-top: 1px solid rgba(212,160,23,0.15);
+    border-bottom: 1px solid rgba(212,160,23,0.15);
+    padding: 32px 60px;
+  }
+  .stats-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+    text-align: center;
+  }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px;
+    font-weight: 900;
+    color: var(--dorado);
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 13px;
+    color: rgba(245,240,232,0.5);
+    margin-top: 6px;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── MENU ── */
+  .section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 100px 60px;
+  }
+  .section-tag {
+    color: var(--dorado);
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 4vw, 56px);
+    font-weight: 900;
+    line-height: 1.05;
+    margin-bottom: 16px;
+  }
+  .section-sub {
+    font-size: 16px;
+    color: rgba(245,240,232,0.55);
+    max-width: 500px;
+    line-height: 1.7;
+    margin-bottom: 60px;
+  }
+
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .menu-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.3s, border-color 0.3s;
+    cursor: pointer;
+  }
+  .menu-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(212,160,23,0.3);
+  }
+  .menu-img {
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 72px;
+    position: relative;
+    overflow: hidden;
+  }
+  .menu-img-tacos { background: linear-gradient(135deg, #3d1a0a, #6b2d12); }
+  .menu-img-quesadillas { background: linear-gradient(135deg, #1a2d0a, #2d4a12); }
+  .menu-img-aguas { background: linear-gradient(135deg, #0a1a3d, #12256b); }
+  .menu-img-birria { background: linear-gradient(135deg, #3d0a0a, #6b1212); }
+  .menu-img-tortas { background: linear-gradient(135deg, #2d1a0a, #4a2d12); }
+  .menu-img-postres { background: linear-gradient(135deg, #1a0a2d, #2d1247); }
+  .menu-body { padding: 20px; }
+  .menu-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .menu-desc {
+    font-size: 13px;
+    color: rgba(245,240,232,0.5);
+    line-height: 1.5;
+    margin-bottom: 16px;
+  }
+  .menu-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .menu-price {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--dorado);
+  }
+  .menu-price span { font-size: 13px; color: rgba(245,240,232,0.4); font-weight: 300; }
+  .menu-btn {
+    background: var(--rojo);
+    color: #fff;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 4px;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: background 0.2s;
+  }
+  .menu-btn:hover { background: var(--rojo-claro); }
+
+  /* ── ABOUT ── */
+  .about-section {
+    background: linear-gradient(180deg, var(--negro) 0%, #100c09 50%, var(--negro) 100%);
+    padding: 100px 0;
+  }
+  .about-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 60px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .about-visual {
+    position: relative;
+  }
+  .about-big-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 180px;
+    font-weight: 900;
+    color: rgba(212,160,23,0.06);
+    line-height: 1;
+    position: absolute;
+    top: -40px; left: -40px;
+    pointer-events: none;
+    user-select: none;
+  }
+  .about-img-box {
+    background: linear-gradient(135deg, rgba(212,160,23,0.1), rgba(192,57,43,0.08));
+    border: 1px solid rgba(212,160,23,0.2);
+    border-radius: 16px;
+    height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .about-img-emoji { font-size: 100px; }
+  .about-img-overlay {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: linear-gradient(transparent, rgba(10,7,5,0.8));
+    padding: 30px;
+  }
+  .about-img-caption {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-style: italic;
+    color: var(--dorado);
+  }
+  .features-list { list-style: none; margin-top: 32px; }
+  .features-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .feature-icon {
+    width: 40px; height: 40px;
+    background: rgba(192,57,43,0.15);
+    border: 1px solid rgba(192,57,43,0.3);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .feature-text h4 {
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+  .feature-text p {
+    font-size: 13px;
+    color: rgba(245,240,232,0.5);
+    line-height: 1.5;
+  }
+
+  /* ── TESTIMONIOS ── */
+  .testimonios-section {
+    padding: 100px 0;
+    background: rgba(212,160,23,0.04);
+    border-top: 1px solid rgba(212,160,23,0.1);
+    border-bottom: 1px solid rgba(212,160,23,0.1);
+  }
+  .testimonios-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 60px;
+  }
+  .testi-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 60px;
+  }
+  .testi-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 12px;
+    padding: 28px;
+    transition: border-color 0.3s;
+  }
+  .testi-card:hover { border-color: rgba(212,160,23,0.25); }
+  .testi-stars { color: var(--dorado); font-size: 14px; margin-bottom: 16px; }
+  .testi-text {
+    font-size: 15px;
+    font-style: italic;
+    color: rgba(245,240,232,0.75);
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+  .testi-author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .testi-avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+  }
+  .av-a { background: #c0392b; }
+  .av-b { background: #2980b9; }
+  .av-c { background: #27ae60; }
+  .testi-name { font-size: 14px; font-weight: 500; }
+  .testi-loc { font-size: 12px; color: rgba(245,240,232,0.4); }
+
+  /* ── CONTACTO ── */
+  .contacto-section { padding: 100px 0; }
+  .contacto-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 60px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .horarios-list { list-style: none; margin-top: 32px; }
+  .horarios-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    font-size: 14px;
+  }
+  .horarios-list li span:first-child { color: rgba(245,240,232,0.6); }
+  .horarios-list li span:last-child { color: var(--dorado); font-weight: 500; }
+  .contact-card {
+    background: linear-gradient(135deg, rgba(192,57,43,0.1), rgba(212,160,23,0.05));
+    border: 1px solid rgba(192,57,43,0.2);
+    border-radius: 16px;
+    padding: 40px;
+  }
+  .contact-field {
+    margin-bottom: 20px;
+  }
+  .contact-field label {
+    display: block;
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: rgba(245,240,232,0.5);
+    margin-bottom: 8px;
+  }
+  .contact-field input,
+  .contact-field textarea {
+    width: 100%;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 6px;
+    padding: 12px 16px;
+    color: var(--crema);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    transition: border-color 0.2s;
+    resize: none;
+    outline: none;
+  }
+  .contact-field input:focus,
+  .contact-field textarea:focus { border-color: var(--dorado); }
+  .contact-submit {
+    width: 100%;
+    background: var(--rojo);
+    color: #fff;
+    border: none;
+    padding: 15px;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: background 0.2s, transform 0.2s;
+    margin-top: 8px;
+  }
+  .contact-submit:hover { background: var(--rojo-claro); transform: translateY(-2px); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #060403;
+    border-top: 1px solid rgba(212,160,23,0.15);
+    padding: 40px 60px;
+  }
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--dorado);
+  }
+  .footer-copy {
+    font-size: 13px;
+    color: rgba(245,240,232,0.3);
+    text-align: center;
+  }
+  .footer-made {
+    font-size: 12px;
+    color: rgba(245,240,232,0.25);
+    text-align: right;
+  }
+  .footer-made span { color: var(--rojo); }
+
+  /* ── MAP PLACEHOLDER ── */
+  .map-placeholder {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 32px;
+    color: rgba(245,240,232,0.4);
+    font-size: 14px;
+  }
+  .map-placeholder span { font-size: 32px; }
+
+  /* ── INFO CHIPS ── */
+  .info-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 32px;
+  }
+  .chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 6px;
+    padding: 10px 16px;
+    font-size: 13px;
+    color: rgba(245,240,232,0.7);
+  }
+  .chip-icon { font-size: 16px; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 16px 24px; }
+    nav.scrolled { padding: 12px 24px; }
+    .nav-links { display: none; }
+    .hero-content, .about-inner, .contacto-inner { grid-template-columns: 1fr; gap: 40px; padding: 0 24px; }
+    .hero { padding-top: 80px; }
+    .hero-visual { display: none; }
+    .section { padding: 60px 24px; }
+    .menu-grid, .testi-grid { grid-template-columns: 1fr; }
+    .stats-inner { grid-template-columns: repeat(2, 1fr); }
+    .stats-bar { padding: 32px 24px; }
+    footer { padding: 32px 24px; }
+    .footer-inner { flex-direction: column; text-align: center; }
+    .demo-badge { font-size: 11px; gap: 8px; flex-wrap: wrap; justify-content: center; }
+    .testimonios-inner, .contacto-inner { padding: 0 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- DEMO BADGE -->
+<div class="demo-badge">
+  <span>🎨 Página <strong>DEMO</strong> — Ejemplo de lo que podemos hacer para tu negocio</span>
+  <a href="https://wa.me/524462595521?text=Hola%2C%20vi%20la%20p%C3%A1gina%20demo%20y%20me%20interesa%20tener%20mi%20propia%20p%C3%A1gina%20web" target="_blank">Quiero la mía →</a>
+</div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <div class="nav-logo">La Taquería del Centro</div>
+  <ul class="nav-links">
+    <li><a href="#menu">Menú</a></li>
+    <li><a href="#nosotros">Nosotros</a></li>
+    <li><a href="#opiniones">Opiniones</a></li>
+    <li><a href="#contacto" class="nav-cta">Reservar</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-texture"></div>
+  <div class="hero-content">
+    <div class="hero-text">
+      <div class="hero-tag">Desde 1987 · Dolores Hidalgo</div>
+      <h1 class="hero-h1">
+        Sabor que<br>
+        <em>enamora</em>
+        desde el primer taco
+      </h1>
+      <p class="hero-desc">
+        Tacos artesanales, recetas de generación en generación,
+        y el mejor ambiente del centro histórico. Ven y descúbrelo.
+      </p>
+      <div class="hero-btns">
+        <a href="#menu" class="btn-primary">Ver el menú</a>
+        <a href="#contacto" class="btn-secondary">¿Cómo llegar?</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-card">
+        <div class="floating-badge"><strong>4.9</strong>★<br>Google</div>
+        <span class="food-emoji">🌮</span>
+        <div class="card-title">La Taquería del Centro</div>
+        <div class="card-sub">Cocina tradicional mexicana</div>
+        <div class="stars">★★★★★</div>
+        <p class="review-text">"Los mejores tacos de birria que he probado en toda mi vida. El caldo es espectacular."</p>
+        <div class="review-author">— María G., Google Maps</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div>
+      <div class="stat-num">35+</div>
+      <div class="stat-label">Años de tradición</div>
+    </div>
+    <div>
+      <div class="stat-num">4.9★</div>
+      <div class="stat-label">Calificación Google</div>
+    </div>
+    <div>
+      <div class="stat-num">500+</div>
+      <div class="stat-label">Clientes diarios</div>
+    </div>
+    <div>
+      <div class="stat-num">20+</div>
+      <div class="stat-label">Platillos del menú</div>
+    </div>
+  </div>
+</div>
+
+<!-- MENÚ -->
+<section id="menu">
+  <div class="section">
+    <div class="section-tag">— Lo que nos hace únicos</div>
+    <h2 class="section-title">Nuestro menú<br>más popular</h2>
+    <p class="section-sub">Ingredientes frescos, tortillas hechas a mano y salsas caseras que harán que regreses siempre.</p>
+    <div class="menu-grid">
+      <div class="menu-card">
+        <div class="menu-img menu-img-tacos">🌮</div>
+        <div class="menu-body">
+          <div class="menu-name">Tacos de Birria</div>
+          <div class="menu-desc">Carne de res marinada 12 horas, tortilla dorada, caldo de consomé incluido.</div>
+          <div class="menu-footer">
+            <div class="menu-price">$35 <span>c/u</span></div>
+            <button class="menu-btn">Ordenar</button>
+          </div>
+        </div>
+      </div>
+      <div class="menu-card">
+        <div class="menu-img menu-img-quesadillas">🧀</div>
+        <div class="menu-body">
+          <div class="menu-name">Quesabirria</div>
+          <div class="menu-desc">Quesadilla rellena de birria con queso Oaxaca derretido. Infaltable.</div>
+          <div class="menu-footer">
+            <div class="menu-price">$45 <span>c/u</span></div>
+            <button class="menu-btn">Ordenar</button>
+          </div>
+        </div>
+      </div>
+      <div class="menu-card">
+        <div class="menu-img menu-img-birria">🍲</div>
+        <div class="menu-body">
+          <div class="menu-name">Caldo de Birria</div>
+          <div class="menu-desc">Porción generosa de carne en su consomé rojo, limón y orégano al gusto.</div>
+          <div class="menu-footer">
+            <div class="menu-price">$80 <span>porción</span></div>
+            <button class="menu-btn">Ordenar</button>
+          </div>
+        </div>
+      </div>
+      <div class="menu-card">
+        <div class="menu-img menu-img-tortas">🥖</div>
+        <div class="menu-body">
+          <div class="menu-name">Torta de Birria</div>
+          <div class="menu-desc">Pan telera tostado, frijoles, birria, aguacate y nuestras salsas secretas.</div>
+          <div class="menu-footer">
+            <div class="menu-price">$65 <span>c/u</span></div>
+            <button class="menu-btn">Ordenar</button>
+          </div>
+        </div>
+      </div>
+      <div class="menu-card">
+        <div class="menu-img menu-img-aguas">🥤</div>
+        <div class="menu-body">
+          <div class="menu-name">Aguas Frescas</div>
+          <div class="menu-desc">Agua de jamaica, horchata, tamarindo y guayaba. Preparadas con fruta natural.</div>
+          <div class="menu-footer">
+            <div class="menu-price">$25 <span>litro</span></div>
+            <button class="menu-btn">Ordenar</button>
+          </div>
+        </div>
+      </div>
+      <div class="menu-card">
+        <div class="menu-img menu-img-postres">🍮</div>
+        <div class="menu-body">
+          <div class="menu-name">Flan Napolitano</div>
+          <div class="menu-desc">Receta casera de la abuela, con cajeta artesanal de la región y nuez.</div>
+          <div class="menu-footer">
+            <div class="menu-price">$40 <span>porción</span></div>
+            <button class="menu-btn">Ordenar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="nosotros" class="about-section">
+  <div class="about-inner">
+    <div class="about-visual">
+      <div class="about-big-text">35</div>
+      <div class="about-img-box">
+        <span class="about-img-emoji">👨‍🍳</span>
+        <div class="about-img-overlay">
+          <div class="about-img-caption">"Cocinamos con el alma"</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="section-tag">— Nuestra historia</div>
+      <h2 class="section-title">Tradición en<br>cada bocado</h2>
+      <p style="font-size:16px; color:rgba(245,240,232,0.6); line-height:1.8; margin-bottom:8px;">
+        Fundada en 1987 por la familia Ramírez, somos el lugar de referencia para quienes buscan sabor auténtico en el corazón de Dolores Hidalgo.
+      </p>
+      <ul class="features-list">
+        <li>
+          <div class="feature-icon">🥩</div>
+          <div class="feature-text">
+            <h4>Carne de primera</h4>
+            <p>Trabajamos solo con carnicería local, res fresca todos los días desde las 6am.</p>
+          </div>
+        </li>
+        <li>
+          <div class="feature-icon">🌽</div>
+          <div class="feature-text">
+            <h4>Tortillas hechas a mano</h4>
+            <p>Masa nixtamalizada diaria, sin conservadores. La diferencia se nota desde el primer mordisco.</p>
+          </div>
+        </li>
+        <li>
+          <div class="feature-icon">🫙</div>
+          <div class="feature-text">
+            <h4>Salsas artesanales</h4>
+            <p>Cuatro salsas caseras que van desde suave hasta habanero. Cada una con su secreto.</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIOS -->
+<section id="opiniones" class="testimonios-section">
+  <div class="testimonios-inner">
+    <div class="section-tag">— Lo que dicen nuestros clientes</div>
+    <h2 class="section-title">Opiniones reales</h2>
+    <div class="testi-grid">
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Vengo todos los domingos con mi familia desde hace 10 años. Los mejores tacos de birria del estado, sin duda alguna."</p>
+        <div class="testi-author">
+          <div class="testi-avatar av-a">MG</div>
+          <div>
+            <div class="testi-name">María González</div>
+            <div class="testi-loc">Dolores Hidalgo, Gto.</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Vine de San Miguel de Allende solo para comer aquí. La quesabirria es una experiencia que no olvidaré. Regreso pronto."</p>
+        <div class="testi-author">
+          <div class="testi-avatar av-b">JR</div>
+          <div>
+            <div class="testi-name">Jorge Reyes</div>
+            <div class="testi-loc">San Miguel de Allende</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"El servicio es excelente y el lugar muy limpio. El caldo de birria perfectamente caliente y sazonado. 100% recomendado."</p>
+        <div class="testi-author">
+          <div class="testi-avatar av-c">LP</div>
+          <div>
+            <div class="testi-name">Laura Pérez</div>
+            <div class="testi-loc">Guanajuato, Gto.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACTO -->
+<section id="contacto" class="contacto-section">
+  <div class="contacto-inner">
+    <div>
+      <div class="section-tag">— Visítanos</div>
+      <h2 class="section-title">¿Dónde<br>encontrarnos?</h2>
+      <div class="info-chips">
+        <div class="chip"><span class="chip-icon">📍</span> Jardín Principal #12, Centro</div>
+        <div class="chip"><span class="chip-icon">📞</span> 418 182 0000</div>
+        <div class="chip"><span class="chip-icon">📱</span> WhatsApp activo</div>
+      </div>
+      <ul class="horarios-list">
+        <li><span>Lunes – Viernes</span><span>8:00 am – 6:00 pm</span></li>
+        <li><span>Sábado</span><span>7:00 am – 8:00 pm</span></li>
+        <li><span>Domingo</span><span>7:00 am – 5:00 pm</span></li>
+        <li><span>Días festivos</span><span>Horario especial</span></li>
+      </ul>
+      <div class="map-placeholder">
+        <span>🗺️</span>
+        Tu ubicación en Google Maps aquí
+      </div>
+    </div>
+    <div class="contact-card">
+      <h3 style="font-family:'Playfair Display',serif; font-size:24px; margin-bottom:8px;">Escríbenos</h3>
+      <p style="font-size:14px; color:rgba(245,240,232,0.5); margin-bottom:28px;">Pedidos especiales, reservaciones o cualquier duda.</p>
+      <div class="contact-field">
+        <label>Tu nombre</label>
+        <input type="text" placeholder="Ej. Carlos Ramírez">
+      </div>
+      <div class="contact-field">
+        <label>Teléfono / WhatsApp</label>
+        <input type="tel" placeholder="418 000 0000">
+      </div>
+      <div class="contact-field">
+        <label>Mensaje</label>
+        <textarea rows="4" placeholder="Ej. Quiero apartar una mesa para 8 personas el sábado..."></textarea>
+      </div>
+      <button class="contact-submit" onclick="alert('¡Mensaje enviado! Nos ponemos en contacto pronto.')">Enviar mensaje →</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">La Taquería del Centro</div>
+    <div class="footer-copy">© 2025 · Dolores Hidalgo, Guanajuato · Todos los derechos reservados</div>
+    <div class="footer-made">Página web desarrollada por<br><span>Sistemas Adisoft</span> · sistemasadisoft.com</div>
+  </div>
+</footer>
+
+<script>
+  // Navbar scroll
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 60) navbar.classList.add('scrolled');
+    else navbar.classList.remove('scrolled');
+  });
+
+  // Smooth scroll para los botones del menú
+  document.querySelectorAll('.menu-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const original = btn.textContent;
+      btn.textContent = '✓ Agregado';
+      btn.style.background = '#27ae60';
+      setTimeout(() => {
+        btn.textContent = original;
+        btn.style.background = '';
+      }, 1500);
+    });
+  });
+
+  // Animate on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.menu-card, .testi-card, .feature-icon').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>
